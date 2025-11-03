@@ -38,5 +38,7 @@ class HashTable {
         size_t trueSize; // number of things in it
         size_t capacity; // number of things it could have
         std::vector<size_t> offsets; // probing offsets
+
+        // push test
 };
 
