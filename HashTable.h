@@ -30,7 +30,13 @@ private:
 // create the hash table class
 class HashTable {
     public:
+        // constructor that sets size; default 8
+        HashTable(size_t initCapacity = 8);
+
     private:
         std::vector<HashTableBucket> buckets;
+        size_t trueSize; // number of things in it
+        size_t capacity; // number of things it could have
+        std::vector<size_t> offsets; // probing offsets
 };
 
