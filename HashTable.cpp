@@ -31,7 +31,7 @@ size_t HashTable::hash(const std::string& key) const {
 bool HashTable::insert(const std::string& key, const size_t& value){
     // check load factor and resize if needed
     if (alpha() >= .5) {
-        // resize(); // We'll uncomment this when it's ready
+        resize();
     }
 
     size_t home = hash(key); // get index
@@ -100,4 +100,26 @@ double HashTable::alpha() const {
 
 // resizer - double when load factor >= .5
 void HashTable::resize() {
+    // create a save of the current buckets
+    std::vector<HashTableBucket> temp = std::move(buckets);
+
+    // double cap
+    capacity = capacity * 2;
+
+    buckets.resize(capacity);
+
+    // new offsets for new capa, basically all the same as before in HashTable up top
+    offsets.resize(capacity - 1);
+    std::iota(offsets.begin(), offsets.end(), 1);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::shuffle(offsets.begin(), offsets.end(), gen);
+
+    trueSize = 0;
+
+    for (const auto& bucket : temp) {
+        if (bucket.type == BucketType::NORMAL) {
+            insert(bucket.key, bucket.value);
+        }
+    }
 }
