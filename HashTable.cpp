@@ -7,6 +7,7 @@
 #include <numeric>
 #include <random>
 #include <algorithm>
+#include <iostream>
 
 HashTable::HashTable(size_t initCapacity) {
     trueSize = 0; // nothing in it yet
@@ -25,4 +26,78 @@ HashTable::HashTable(size_t initCapacity) {
 size_t HashTable::hash(const std::string& key) const {
     size_t hashVal = std::hash<std::string>()(key);
     return hashVal % capacity; // keep index within bounds
+}
+
+bool HashTable::insert(const std::string& key, const size_t& value){
+    // check load factor and resize if needed
+    if (alpha() >= .5) {
+        // resize(); // We'll uncomment this when it's ready
+    }
+
+    size_t home = hash(key); // get index
+
+    std::optional<size_t> bucket;
+
+    if (buckets[home].type != BucketType::NORMAL) {
+        // this bucket is empty use it
+        bucket = home;
+    } else if (buckets[home].key == key) {
+        // repeated item
+        return false;
+    }
+
+    // do p.r.probing if collision happened
+    if (buckets[home].type == BucketType::NORMAL) {
+        for (size_t i = 0; i < offsets.size(); ++i) {
+            // use offsets vector to get new index
+            // make sure to check for dupes
+            size_t probe = (home + offsets[i]) % capacity;
+
+            // bucket to probe
+            if (buckets[probe].type == BucketType::ESS) {
+                // this is empty since start so nothing has been here
+                if (!bucket.has_value()) {
+                    bucket = probe;
+                }
+                break;
+            }
+
+            if (buckets[probe].type == BucketType::EAR) {
+                if (!bucket.has_value()) {
+                    bucket = probe;
+                }
+            }
+
+            if (buckets[probe].type == BucketType::NORMAL) {
+                if (buckets[probe].key == key) {
+                    // dupe
+                    return false;
+                }
+            }
+        }
+    }
+
+    // actually make the insert
+    if (bucket.has_value()) {
+        buckets[bucket.value()].key = key; // set key
+        buckets[bucket.value()].value = value; // set val
+        buckets[bucket.value()].type = BucketType::NORMAL; // occupied set to NORMAL
+        trueSize++; // inserted so increment true size count
+        return true;
+    }
+    return false; // should not be needed
+}
+
+// get num items in table
+size_t HashTable::size() const {
+    return trueSize;
+}
+
+// load factor -> size / capacity, casted to doubles just to be sure
+double HashTable::alpha() const {
+    return static_cast<double>(trueSize) / static_cast<double>(capacity);
+}
+
+// resizer - double when load factor >= .5
+void HashTable::resize() {
 }
