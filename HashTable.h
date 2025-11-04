@@ -40,12 +40,12 @@ class HashTable {
         bool insert(const std::string& key, const size_t& value);
 
         // get num items in table
-        size_t size() const{
+        size_t HashTable::size() const{
             return trueSize;
         }
 
         // load factor -> size / capacity, casted to doubles just to be sure
-        double alpha() const{
+        double HashTable::alpha() const{
             return static_cast<double>trueSize / static_cast<double>capacity;
         }
 
