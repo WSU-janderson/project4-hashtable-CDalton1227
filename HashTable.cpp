@@ -143,10 +143,16 @@ bool HashTable::contains(const std::string& key) const {
         size_t probe = (home + offsets[i]) % capacity;
         const HashTableBucket& probe = buckets[probe];
 
-        //normal
-        //ess
-        //ear
+        if (probe.type == BucketType::NORMAL) {
+            if (probe.key == key) {
+                return true; // Normal and same key = true
+            }
+        }
 
+        if (probe.type == BucketType::ESS) {
+            // cant' be here - ess
+            return false;
+        }
     }
 
     return false; // if program reaches here, no key, no item
