@@ -94,11 +94,7 @@ class HashTable {
                 trueSize++; // inserted so increment true size count
                 return true;
             }
-            return false; // clion wants to autocomplete this here,
-                          // and I guess that makes sense?
-                          // but also only if there was no room? and resize should keep that from happening
-                          // as long as it works.
-                          // Oh well, probably safer if nothing else.
+            return false; // THIS SHOULD NOT BE NEEDED
         }
 
         // get num items in table
