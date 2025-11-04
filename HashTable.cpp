@@ -139,9 +139,14 @@ bool HashTable::contains(const std::string& key) const {
         return false;
     }
 
-    if (home.type == BucketType::EAR || (home.type == BucketType::NORMAL && home.key != key)) {
-        for (size_t i = 0; i < offsets.size(); ++i) {
-            si
-        }
+    for (size_t i = 0; i < offsets.size(); ++i) {
+        size_t probe = (home + offsets[i]) % capacity;
+        const HashTableBucket& probe = buckets[probe];
+
+        //normal
+        //ess
+        //ear
     }
+
+    return false; // if program reaches here, no key, no item
 }
