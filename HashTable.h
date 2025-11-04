@@ -104,13 +104,8 @@ class HashTable {
 
         // load factor -> size / capacity, casted to doubles just to be sure
         double alpha() const{
-            return static_cast<double>trueSize / static_cast<double>capacity;
+            return static_cast<double>(trueSize) / static_cast<double>(capacity);
         }
-
-        // resize (double for simplicity) when load factor reaches .5
-        void resize() {
-        }
-
 
     private:
         std::vector<HashTableBucket> buckets;
@@ -120,7 +115,7 @@ class HashTable {
 
         // hash function to prevent excessive repetition in every other method
         size_t hash(const std::string& key) const;
-        // resizer
+        // resizer - double when load factor >= .5
         void resize();
 };
 
