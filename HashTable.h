@@ -37,12 +37,27 @@ class HashTable {
         HashTable(size_t initCapacity = 8);
         friend std::ostream& operator<<(std::ostream& os, const HashTable& ht);
 
+        bool insert(const std::string& key, const size_t& value);
+
+        // get num items in table
+        size_t size() const{
+            return trueSize;
+        }
+
+        // load factor -> size / capacity, casted to doubles just to be sure
+        double alpha() const{
+            return static_cast<double>trueSize / static_cast<double>capacity;
+        }
+
     private:
         std::vector<HashTableBucket> buckets;
         size_t trueSize; // number of things in it
         size_t capacity; // number of things it could have
         std::vector<size_t> offsets; // probing offsets
 
-        size_t hash(const std::string& key) const; // hash function to prevent excessive repetition in every other method
+        // hash function to prevent excessive repetition in every other method
+        size_t hash(const std::string& key) const;
+        // resizer
+        void resize();
 };
 
