@@ -123,3 +123,25 @@ void HashTable::resize() {
         }
     }
 }
+
+bool HashTable::contains(const std::string& key) const {
+    // index
+    size_t home = hash(key);
+    const HashTableBucket& bucket = buckets[home];
+
+    if (home.type == BucketType::NORMAL && home.key == key) {
+        // this is it
+        return true;
+    }
+
+    if (home.type == BucketType::ESS) {
+        // empty
+        return false;
+    }
+
+    if (home.type == BucketType::EAR || (home.type == BucketType::NORMAL && home.key != key)) {
+        for (size_t i = 0; i < offsets.size(); ++i) {
+            si
+        }
+    }
+}

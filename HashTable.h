@@ -39,8 +39,11 @@ class HashTable {
         friend std::ostream& operator<<(std::ostream& os, const HashTable& ht);
 
         bool insert(const std::string& key, const size_t& value);
+
         size_t size() const;
         double alpha() const;
+
+        bool contains(const std::string& key) const;
 
     private:
         std::vector<HashTableBucket> buckets;
