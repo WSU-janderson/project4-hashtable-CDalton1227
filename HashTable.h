@@ -37,7 +37,7 @@ class HashTable {
         HashTable(size_t initCapacity = 8);
         friend std::ostream& operator<<(std::ostream& os, const HashTable& ht);
 
-        bool HashTable::insert(const std::string& key, const size_t& value){
+        bool insert(const std::string& key, const size_t& value){
           	// check load factor and resize if needed
         	if (alpha() <= .5) {
             	resize();
@@ -58,6 +58,8 @@ class HashTable {
             // do p.r.probing if collision happened
             if (buckets[home].type == BucketType::NORMAL) {
             	for (size_t i = 0; i < offsets.size(); ++i) {
+                  	// use offsets vector to get new index
+                    // make sure to check for dupes
                 	size_t probe = (home + offsets[i]) % capacity;
 
                     // bucket to probe
@@ -68,24 +70,49 @@ class HashTable {
                         }
                         break;
                     }
+
+                    if (probe.type == BucketType::EAR) {
+                    	if (!bucket.has_value()) {
+                        	bucket = probe;
+                    	}
+                    }
+
+                    if (probe.type == BucketType::NORMAL) {
+                    	if (probe.key == key) {
+                        	// dupe
+                            return false;
+                    	}
+                    }
             	}
             }
 
-
+            // actually make the insert
+            if (bucket.has_value()) {
+            	buckets[home.value()].key = key; // set key
+                buckets[home.value()].value = value; // set val
+                buckets[home.value()].type = BucketType::NORMAL; // occupied set to NORMAL
+                trueSize++; // inserted so increment true size count
+                return true;
+            }
+            return false; // clion wants to autocomplete this here,
+                          // and I guess that makes sense?
+                          // but also only if there was no room? and resize should keep that from happening
+                          // as long as it works.
+                          // Oh well, probably safer if nothing else.
         }
 
         // get num items in table
-        size_t HashTable::size() const{
+        size_t size() const{
             return trueSize;
         }
 
         // load factor -> size / capacity, casted to doubles just to be sure
-        double HashTable::alpha() const{
+        double alpha() const{
             return static_cast<double>trueSize / static_cast<double>capacity;
         }
 
         // resize (double for simplicity) when load factor reaches .5
-        void HashTable::resize() {
+        void resize() {
         }
 
 
