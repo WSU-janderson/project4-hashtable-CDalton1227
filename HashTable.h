@@ -39,13 +39,13 @@ class HashTable {
 
         bool insert(const std::string& key, const size_t& value){
           	// check load factor and resize if needed
-        	if (alpha() <= .5) {
+        	if (alpha() >= .5) {
             	resize();
             }
 
             size_t home = hash(key); // get index
 
-            std::optionl<size_t> bucket;
+            std::optional<size_t> bucket;
 
             if (buckets[home].type != BucketType::NORMAL) {
             	// this bucket is empty use it
@@ -63,7 +63,7 @@ class HashTable {
                 	size_t probe = (home + offsets[i]) % capacity;
 
                     // bucket to probe
-                    if (probe.type == BucketType::ESS) {
+                    if (buckets[probe].type == BucketType::ESS) {
                     	// this is empty since start so nothing has been here
                         if (!bucket.has_value()) {
                         	bucket = probe;
@@ -71,13 +71,13 @@ class HashTable {
                         break;
                     }
 
-                    if (probe.type == BucketType::EAR) {
+                    if (buckets[probe].type == BucketType::EAR) {
                     	if (!bucket.has_value()) {
                         	bucket = probe;
                     	}
                     }
 
-                    if (probe.type == BucketType::NORMAL) {
+                    if (buckets[probe].type == BucketType::NORMAL) {
                     	if (probe.key == key) {
                         	// dupe
                             return false;
@@ -88,9 +88,9 @@ class HashTable {
 
             // actually make the insert
             if (bucket.has_value()) {
-            	buckets[home.value()].key = key; // set key
-                buckets[home.value()].value = value; // set val
-                buckets[home.value()].type = BucketType::NORMAL; // occupied set to NORMAL
+            	buckets[bucket.value()].key = key; // set key
+                buckets[bucket.value()].value = value; // set val
+                buckets[bucket.value()].type = BucketType::NORMAL; // occupied set to NORMAL
                 trueSize++; // inserted so increment true size count
                 return true;
             }
