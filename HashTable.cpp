@@ -146,6 +146,7 @@ bool HashTable::contains(const std::string& key) const {
         //normal
         //ess
         //ear
+
     }
 
     return false; // if program reaches here, no key, no item
