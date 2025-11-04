@@ -154,6 +154,5 @@ bool HashTable::contains(const std::string& key) const {
             return false;
         }
     }
-
     return false; // if program reaches here, no key, no item
 }
