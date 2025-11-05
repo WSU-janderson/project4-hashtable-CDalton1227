@@ -16,6 +16,7 @@ enum class BucketType {
     NORMAL, ESS, EAR
 };
 
+class HashTable;
 
 // create the hash table buckets
 class HashTableBucket {
