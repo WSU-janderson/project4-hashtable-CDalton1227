@@ -3,13 +3,13 @@
  */
 
 #include "HashTable.h"
+#include <algorithm>
 #include <functional>
+#include <iostream>
+#include <ostream>
 #include <numeric>
 #include <random>
-#include <algorithm>
-#include <iostream>
 #include <stdexcept>
-#include <ostream>
 #include <utility>
 
 HashTable::HashTable(size_t initCapacity) {

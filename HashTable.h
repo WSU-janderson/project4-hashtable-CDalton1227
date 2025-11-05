@@ -20,6 +20,7 @@ enum class BucketType {
 // create the hash table buckets
 class HashTableBucket {
     friend class HashTable;
+    friend std::ostream& operator<<(std::ostream& os, const HashTable& t);
     public:
         HashTableBucket () {
             type = BucketType::ESS; // default type
