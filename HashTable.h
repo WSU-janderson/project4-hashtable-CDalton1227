@@ -46,6 +46,7 @@ class HashTable {
         bool contains(const std::string& key) const;
 
         std::optional<size_t> get(const std::string& key) const;
+        bool remove(const std::string& key);
 
     private:
         std::vector<HashTableBucket> buckets;

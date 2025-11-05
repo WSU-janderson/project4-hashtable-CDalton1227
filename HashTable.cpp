@@ -186,3 +186,38 @@ std::optional<size_t> HashTable::get(const std::string& key) const {
     }
     return std::nullopt; // key not found
 }
+
+bool HashTable::remove(const std::string& key) {
+  	// home index
+	size_t home = hash(key);
+    HashTableBucket& bucket = buckets[home];
+
+    // check home
+    if (bucket.type == BucketType::ESS) {
+    	return false; // key shouldn't be here unless type assignments aren't working
+    }
+
+    if (bucket.type == BucketType::NORMAL && bucket.key == key) {
+    	bucket.type = BucketType::EAR; // mark as removed from
+        trueSize--; // shrinks after loss
+        return true; // done
+    }
+
+    for (size_t i = 0; i < offsets.size(); ++i) {
+    	size_t index = (home + offsets[i]) % capacity;
+        HashTableBucket& probe = buckets[index];
+
+        if (probe.type == BucketType::ESS) {
+        	return false; // empty
+        }
+
+        if (probe.type == BucketType::NORMAL) {
+        	if (probe.key == key) {
+                  probe.type = BucketType::EAR; // removal
+                  trueSize--; // shrinks
+                  return true; // done
+        	}
+        }
+    }
+    return false; // not found
+}
