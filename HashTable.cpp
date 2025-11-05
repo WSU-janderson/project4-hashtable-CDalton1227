@@ -8,6 +8,8 @@
 #include <random>
 #include <algorithm>
 #include <iostream>
+#include <stdexcept>
+#include <ostream>
 
 HashTable::HashTable(size_t initCapacity) {
     trueSize = 0; // nothing in it yet
@@ -256,4 +258,18 @@ std::vector<std::string> HashTable::keys() const {
 
 size_t HashTable::capacity() const {
   return capacity; // simple enough, returns the capacity member var
+}
+
+std::ostream& operator<<(std::ostream& os, const HashTable& t) {
+  	// loop through the buckets
+	for (size_t i = 0; i < t.capacity(); ++i) {
+    	const HashTableBucket& bucket = t.buckets[i];
+
+        // check bucket type = normal?
+        if (bucket.type == BucketType::NORMAL) {
+        	os << "Bucket " << i << ": <" << bucket.key << ", " << bucket.value << ">" << std::endl;
+        }
+	}
+
+   	return os;
 }
