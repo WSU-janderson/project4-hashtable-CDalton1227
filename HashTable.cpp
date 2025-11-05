@@ -42,7 +42,7 @@ bool HashTable::insert(const std::string& key, const size_t& value){
     std::optional<size_t> bucket;
 
     if (buckets[home].type != BucketType::NORMAL) {
-        // this bucket is empty use it
+        // this bucket is, empty use it
         bucket = home;
     } else if (buckets[home].key == key) {
         // repeated item
