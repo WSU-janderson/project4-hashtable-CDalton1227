@@ -52,6 +52,8 @@ class HashTable {
 
         std::vector<std::string> keys() const;
 
+        size_t capacity() const;
+
     private:
         std::vector<HashTableBucket> buckets;
         size_t trueSize; // number of things in it

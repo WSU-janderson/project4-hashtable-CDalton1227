@@ -253,3 +253,7 @@ std::vector<std::string> HashTable::keys() const {
     }
     return keys; // return vector of keys
 }
+
+size_t HashTable::capacity() const {
+  return capacity; // simple enough, returns the capacity member var
+}
