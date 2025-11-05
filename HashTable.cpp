@@ -223,10 +223,11 @@ bool HashTable::remove(const std::string& key) {
 }
 
 size_t HashTable::operator[](const std::string& key) {
+  	// home index again
 	size_t home = hash(key);
     HashTableBucket& bucket = buckets[home];
 
-    // check home
+    // check home again
     if (bucket.type == BucketType::NORMAL && bucket.key == key) {
     	return bucket.value;
     }
@@ -240,4 +241,15 @@ size_t HashTable::operator[](const std::string& key) {
         }
     }
     return 0;
+}
+
+std::vector<std::string> HashTable::keys() const {
+	std::vector<std::string> keys; // new vector for keys
+    // loop through the buckets and add all keys to new vector if type is normal (has a key)
+    for (const auto& bucket : buckets) {
+    	if (bucket.type == BucketType::NORMAL) {
+        	keys.push_back(bucket.key);
+    	}
+    }
+    return keys; // return vector of keys
 }
