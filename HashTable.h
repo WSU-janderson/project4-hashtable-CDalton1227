@@ -45,6 +45,8 @@ class HashTable {
 
         bool contains(const std::string& key) const;
 
+        std::optional<size_t> get(const std::string& key) const;
+
     private:
         std::vector<HashTableBucket> buckets;
         size_t trueSize; // number of things in it

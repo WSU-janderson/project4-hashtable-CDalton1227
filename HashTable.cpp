@@ -129,12 +129,12 @@ bool HashTable::contains(const std::string& key) const {
     size_t home = hash(key);
     const HashTableBucket& bucket = buckets[home];
 
-    if (home.type == BucketType::NORMAL && home.key == key) {
+    if (bucket.type == BucketType::NORMAL && bucket.key == key) {
         // this is it
         return true;
     }
 
-    if (home.type == BucketType::ESS) {
+    if (bucket.type == BucketType::ESS) {
         // empty
         return false;
     }
@@ -155,4 +155,34 @@ bool HashTable::contains(const std::string& key) const {
         }
     }
     return false; // if program reaches here, no key, no item
+}
+
+std::optional<size_t> HashTable::get(const std::string& key) const {
+	// get home index
+    size_t home = hash(key);
+    const HashTableBucket& bucket = buckets[home];
+
+    if (bucket.type == BucketType::ESS) {
+		return std::nullopt; // because this bucket has never been used
+    }
+
+    if (bucket.type == BucketType::NORMAL && bucket.key == key) {
+    	return bucket.value; // this is it
+    }
+
+    for (size_t i = 0; i < offsets.size(); ++i) {
+    	size_t index = (home + offsets[i]) % capacity;
+        const HashTableBucket&  = buckets[index];
+
+        if (probe.type == BucketType::ESS) {
+        	return std::nullopt; // empty
+        }
+
+        if (probe.type == BucketType::NORMAL) {
+        	if (probe.key == key) {
+            	return bucket.value; // key found
+        	}
+        }
+    }
+    return std::nullopt; // key not found
 }
