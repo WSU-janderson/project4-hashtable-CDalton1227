@@ -96,7 +96,7 @@ size_t HashTable::size() const {
     return trueSize;
 }
 
-// load factor -> size / capacity, casted to doubles just to be sure
+// load factor -> size / capacity, cast to doubles just to be sure
 double HashTable::alpha() const {
     return static_cast<double>(trueSize) / static_cast<double>(currentCapacity);
 }
