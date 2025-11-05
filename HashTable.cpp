@@ -14,11 +14,11 @@
 
 HashTable::HashTable(size_t initCapacity) {
     trueSize = 0; // nothing in it yet
-    capacity = initCapacity; // set to the size input in constructor
+    currentCapacity = initCapacity; // set to the size input in constructor
 
-    buckets.resize(capacity); // resize (vector) to initCapacity number of buckets
+    buckets.resize(currentCapacity); // resize (vector) to initCapacity number of buckets
 
-    offsets.resize(capacity - 1);
+    offsets.resize(currentCapacity - 1);
 
     std::iota(offsets.begin(), offsets.end(), 1); // make the list of offsets starting with 1
     std::random_device rd; // seed for rng
@@ -28,7 +28,7 @@ HashTable::HashTable(size_t initCapacity) {
 
 size_t HashTable::hash(const std::string& key) const {
     size_t hashVal = std::hash<std::string>()(key);
-    return hashVal % capacity; // keep index within bounds
+    return hashVal % currentCapacity; // keep index within bounds
 }
 
 bool HashTable::insert(const std::string& key, const size_t& value){
@@ -54,7 +54,7 @@ bool HashTable::insert(const std::string& key, const size_t& value){
         for (size_t i = 0; i < offsets.size(); ++i) {
             // use offsets vector to get new index
             // make sure to check for dupes
-            size_t probe = (home + offsets[i]) % capacity;
+            size_t probe = (home + offsets[i]) % currentCapacity;
 
             // bucket to probe
             if (buckets[probe].type == BucketType::ESS) {
@@ -98,7 +98,7 @@ size_t HashTable::size() const {
 
 // load factor -> size / capacity, casted to doubles just to be sure
 double HashTable::alpha() const {
-    return static_cast<double>(trueSize) / static_cast<double>(capacity);
+    return static_cast<double>(trueSize) / static_cast<double>(currentCapacity);
 }
 
 // resizer - double when load factor >= .5
@@ -107,12 +107,12 @@ void HashTable::resize() {
     std::vector<HashTableBucket> temp = std::move(buckets);
 
     // double cap
-    capacity = capacity * 2;
+    currentCapacity = currentCapacity * 2;
 
-    buckets.resize(capacity);
+    buckets.resize(currentCapacity);
 
     // new offsets for new capa, basically all the same as before in HashTable up top
-    offsets.resize(capacity - 1);
+    offsets.resize(currentCapacity - 1);
     std::iota(offsets.begin(), offsets.end(), 1);
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -143,7 +143,7 @@ bool HashTable::contains(const std::string& key) const {
     }
 
     for (size_t i = 0; i < offsets.size(); ++i) {
-        size_t index = (home + offsets[i]) % capacity;
+        size_t index = (home + offsets[i]) % currentCapacity;
         const HashTableBucket& probe = buckets[index];
 
         if (probe.type == BucketType::NORMAL) {
@@ -174,7 +174,7 @@ std::optional<size_t> HashTable::get(const std::string& key) const {
     }
 
     for (size_t i = 0; i < offsets.size(); ++i) {
-    	size_t index = (home + offsets[i]) % capacity;
+    	size_t index = (home + offsets[i]) % currentCapacity;
         const HashTableBucket& probe = buckets[index];
 
         if (probe.type == BucketType::ESS) {
@@ -207,7 +207,7 @@ bool HashTable::remove(const std::string& key) {
     }
 
     for (size_t i = 0; i < offsets.size(); ++i) {
-    	size_t index = (home + offsets[i]) % capacity;
+    	size_t index = (home + offsets[i]) % currentCapacity;
         HashTableBucket& probe = buckets[index];
 
         if (probe.type == BucketType::ESS) {
@@ -236,7 +236,7 @@ size_t& HashTable::operator[](const std::string& key) {
     }
 
     for (size_t i = 0; i < offsets.size(); ++i) {
-    	size_t index = (home + offsets[i]) % capacity;
+    	size_t index = (home + offsets[i]) % currentCapacity;
         HashTableBucket& probe = buckets[index];
 
         if (probe.type == BucketType::NORMAL && probe.key == key) {
@@ -258,7 +258,7 @@ std::vector<std::string> HashTable::keys() const {
 }
 
 size_t HashTable::capacity() const {
-	return capacity; // simple enough, returns the capacity member var
+	return currentCapacity; // simple enough, returns the capacity member var
 }
 
 std::ostream& operator<<(std::ostream& os, const HashTable& t) {

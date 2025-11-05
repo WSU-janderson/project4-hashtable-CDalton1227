@@ -59,7 +59,7 @@ class HashTable {
     private:
         std::vector<HashTableBucket> buckets;
         size_t trueSize; // number of things in it
-        size_t capacity; // number of things it could have
+        size_t currentCapacity; // number of things it could have
         std::vector<size_t> offsets; // probing offsets
 
         // hash function to prevent excessive repetition in every other method
