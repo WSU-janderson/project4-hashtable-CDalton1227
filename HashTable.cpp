@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <ostream>
+#include <utility>
 
 HashTable::HashTable(size_t initCapacity) {
     trueSize = 0; // nothing in it yet
@@ -142,8 +143,8 @@ bool HashTable::contains(const std::string& key) const {
     }
 
     for (size_t i = 0; i < offsets.size(); ++i) {
-        size_t probe = (home + offsets[i]) % capacity;
-        const HashTableBucket& probe = buckets[probe];
+        size_t index = (home + offsets[i]) % capacity;
+        const HashTableBucket& probe = buckets[index];
 
         if (probe.type == BucketType::NORMAL) {
             if (probe.key == key) {
@@ -174,7 +175,7 @@ std::optional<size_t> HashTable::get(const std::string& key) const {
 
     for (size_t i = 0; i < offsets.size(); ++i) {
     	size_t index = (home + offsets[i]) % capacity;
-        const HashTableBucket&  = buckets[index];
+        const HashTableBucket& probe = buckets[index];
 
         if (probe.type == BucketType::ESS) {
         	return std::nullopt; // empty
@@ -182,7 +183,7 @@ std::optional<size_t> HashTable::get(const std::string& key) const {
 
         if (probe.type == BucketType::NORMAL) {
         	if (probe.key == key) {
-            	return bucket.value; // key found
+            	return probe.value; // key found
         	}
         }
     }
@@ -224,7 +225,7 @@ bool HashTable::remove(const std::string& key) {
     return false; // not found
 }
 
-size_t HashTable::operator[](const std::string& key) {
+size_t& HashTable::operator[](const std::string& key) {
   	// home index again
 	size_t home = hash(key);
     HashTableBucket& bucket = buckets[home];
@@ -242,7 +243,7 @@ size_t HashTable::operator[](const std::string& key) {
         	return probe.value;
         }
     }
-    return 0;
+    throw std::runtime_error("Key not found");
 }
 
 std::vector<std::string> HashTable::keys() const {
@@ -257,7 +258,7 @@ std::vector<std::string> HashTable::keys() const {
 }
 
 size_t HashTable::capacity() const {
-  return capacity; // simple enough, returns the capacity member var
+	return capacity; // simple enough, returns the capacity member var
 }
 
 std::ostream& operator<<(std::ostream& os, const HashTable& t) {
@@ -270,6 +271,5 @@ std::ostream& operator<<(std::ostream& os, const HashTable& t) {
         	os << "Bucket " << i << ": <" << bucket.key << ", " << bucket.value << ">" << std::endl;
         }
 	}
-
    	return os;
 }
