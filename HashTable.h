@@ -48,6 +48,8 @@ class HashTable {
         std::optional<size_t> get(const std::string& key) const;
         bool remove(const std::string& key);
 
+        size_t& operator[](const std::string& key);
+
     private:
         std::vector<HashTableBucket> buckets;
         size_t trueSize; // number of things in it

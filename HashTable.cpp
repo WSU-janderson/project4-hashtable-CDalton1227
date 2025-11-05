@@ -221,3 +221,23 @@ bool HashTable::remove(const std::string& key) {
     }
     return false; // not found
 }
+
+size_t HashTable::operator[](const std::string& key) {
+	size_t home = hash(key);
+    HashTableBucket& bucket = buckets[home];
+
+    // check home
+    if (bucket.type == BucketType::NORMAL && bucket.key == key) {
+    	return bucket.value;
+    }
+
+    for (size_t i = 0; i < offsets.size(); ++i) {
+    	size_t index = (home + offsets[i]) % capacity;
+        HashTableBucket& probe = buckets[index];
+
+        if (probe.type == BucketType::NORMAL && probe.key == key) {
+        	return probe.value;
+        }
+    }
+    return 0;
+}
