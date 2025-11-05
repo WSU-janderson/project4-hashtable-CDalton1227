@@ -204,6 +204,7 @@ bool HashTable::remove(const std::string& key) {
     	bucket.type = BucketType::EAR; // mark as removed from
         trueSize--; // shrinks after loss
         return true; // done
+    }
 
     for (size_t i = 0; i < offsets.size(); ++i) {
     	size_t index = (home + offsets[i]) % currentCapacity;
